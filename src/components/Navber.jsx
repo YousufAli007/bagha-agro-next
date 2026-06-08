@@ -1,103 +1,138 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router";
 
+import { motion, AnimatePresence } from "framer-motion";
+import { FaBars, FaCartShopping, FaCow, FaFish, FaLeaf, FaRobot, FaWheatAwn, FaHouse } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
-  const navLinks = (
-    <>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-      <li>
-        <NavLink to="/services">Services</NavLink>
-      </li>
-      <li>
-        <NavLink to="/fisheries">Fisheries</NavLink>
-      </li>
-      <li>
-        <NavLink to="/livestock">Livestock</NavLink>
-      </li>
-      <li>
-        <NavLink to="/contact">Contact</NavLink>
-      </li>
-    </>
-  );
+  // nav menu list
+  const menuItems = [
+    { name: "হোম", path: "/", icon: <FaHouse /> },
+    { name: "কৃষি সেবা", path: "/agriculture", icon: <FaWheatAwn /> },
+    { name: "প্রাণিসম্পদ", path: "/livestock", icon: <FaCow /> },
+    { name: "মৎস্য সেবা", path: "/fisheries", icon: <FaFish /> }, 
+    { name: "কৃষি বাজার", path: "/agro-market", icon: <FaCartShopping /> },
+    { name: "AI সহকারী", path: "/ai-assistant", icon: <FaRobot className="text-cyan-400" /> },
+  ];
+
+  // active and normal link style (লাইভ কালার চেঞ্জের জন্য)
+  const linkStyle = ({ isActive }) =>
+    `flex items-center gap-2 py-2 text-base font-semibold transition-all duration-300 ${
+      isActive ? "text-lime-400" : "text-gray-100 hover:text-lime-400"
+    }`;
 
   return (
-    <nav className="bg-green-700 text-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+    <nav className="bg-gradient-to-r from-green-900 to-emerald-950 shadow-lg sticky top-0 z-50 border-b border-green-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
           
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold">
-            Bagha Agro
+          <Link to="/">
+            <motion.div 
+              className="flex items-center space-x-2 text-white cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FaLeaf className="text-lime-400 text-2xl lg:text-3xl" />
+              <span className="text-xl lg:text-2xl font-bold tracking-wide">
+                Bagha <span className="text-lime-400">Agro</span>
+              </span>
+            </motion.div>
           </Link>
 
           {/* Desktop Menu */}
-          <ul className="hidden md:flex gap-6 font-medium">
-            {navLinks}
+          <ul className="hidden xl:flex items-center gap-6 lg:gap-8">
+            {menuItems.map((item, index) => (
+              <motion.li 
+                key={item.path}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="list-none"
+              >
+                {/* NavLink এর চিলড্রেন ফাংশন ব্যবহার করে isActive কে ভেতরে নিয়ে আসা হয়েছে */}
+                <NavLink to={item.path} className={linkStyle} onClick={() => setOpen(false)}>
+                  {({ isActive }) => (
+                    <>
+                      {/* icon color */}
+                      <span className="text-xl text-lime-400 md:text-lg">{item.icon}</span>
+                      
+                      {/* border animation */}
+                      <span className="relative pb-1 before:absolute before:bottom-0 before:left-0 before:h-[2px] before:w-full before:scale-x-0 before:bg-lime-400 before:transition-transform before:duration-300 hover:before:scale-x-100 md:block">
+                        {/* NavLink এর আসল isActive দিয়ে বর্ডারের স্কেল লাইভ কন্ট্রোল হচ্ছে */}
+                        <span className={`absolute bottom-0 left-0 h-[2px] w-full bg-lime-400 transition-transform duration-300 ${
+                          isActive ? "scale-x-100" : "scale-x-0"
+                        }`} />
+                        {item.name}
+                      </span>
+                    </>
+                  )}
+                </NavLink>
+              </motion.li>
+            ))}
           </ul>
 
           {/* Desktop Button */}
-          <div className="hidden md:block">
-            <button className="bg-white text-green-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100">
-              Login
-            </button>
+          <div className="hidden xl:block">
+            <motion.button 
+              whileHover={{ scale: 1.05, backgroundColor: "#a3e635" }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-lime-500 text-green-950 px-5 py-2 rounded-xl font-semibold shadow-md transition-colors"
+            >
+              লগইন / সাইনআপ
+            </motion.button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile & Tablet Menu Button */}
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden"
+            className="xl:hidden text-gray-100 hover:text-lime-400 p-2 focus:outline-none"
           >
-            {open ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            {open ? <FaTimes size={26} /> : <FaBars size={26} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        {open && (
-          <div className="md:hidden pb-4">
-            <ul className="flex flex-col gap-4 font-medium">
-              {navLinks}
-            </ul>
+        {/* Mobile & Tablet Menu (Smooth Motion Animation) */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="xl:hidden overflow-hidden"
+            >
+              <ul className="flex flex-col gap-4 pl-2 border-t border-green-800 pt-4">
+                {menuItems.map((item, index) => (
+                  <motion.li key={item.path} className="list-none">
+                    <NavLink to={item.path} className={linkStyle} onClick={() => setOpen(false)}>
+                      {({ isActive }) => (
+                        <>
+                          <span className="text-xl text-lime-400 md:text-lg">{item.icon}</span>
+                          <span className="relative pb-1">
+                            <span className={`absolute bottom-0 left-0 h-[2px] w-full bg-lime-400 transition-transform duration-300 ${
+                              isActive ? "scale-x-100" : "scale-x-0"
+                            }`} />
+                            {item.name}
+                          </span>
+                        </>
+                      )}
+                    </NavLink>
+                  </motion.li>
+                ))}
+              </ul>
+              <div className="px-2 pt-4 pb-6">
+                <button className="w-full bg-gradient-to-r from-lime-500 to-lime-600 text-green-950 py-2.5 rounded-xl font-semibold shadow-md">
+                  লগইন / সাইনআপ
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            <button className="mt-4 w-full bg-white text-green-700 py-2 rounded-lg font-semibold">
-              Login
-            </button>
-          </div>
-        )}
       </div>
     </nav>
   );
