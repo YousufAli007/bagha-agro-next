@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { FaBars, FaCartShopping, FaCow, FaFish, FaLeaf, FaRobot, FaWheatAwn, FaHouse } from "react-icons/fa6";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa"; // এখানে react-index-icons বদলে react-icons করা হয়েছে
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -25,7 +25,8 @@ const Navbar = () => {
     }`;
 
   return (
-    <nav className="bg-gradient-to-r from-green-900 to-emerald-950 shadow-lg sticky top-0 z-50 border-b border-green-800">
+    /* fixed top-0 left-0 w-full এবং z-[999] ব্যবহারের কারণে নেভবারটি সবসময় উপরে ভেসে থাকবে */
+    <nav className="fixed top-0 left-0 w-full bg-gradient-to-r from-green-900 to-emerald-950 shadow-lg z-[999] border-b border-green-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           
@@ -36,10 +37,12 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <FaLeaf className="text-lime-400 text-2xl lg:text-3xl" />
-              <span className="text-xl lg:text-2xl font-bold tracking-wide">
-                Bagha <span className="text-lime-400">Agro</span>
-              </span>
+              
+                <img className="rounded-4xl w-15 h-14" src="https://i.ibb.co.com/Y76n92QR/Whats-App-Image-2026-06-10-at-2-58-22-PM.jpg" alt="" />
+              {/* <span className="text-xl lg:text-2xl font-bold tracking-wide">
+                Bagha Smart <span className="text-lime-400">Agro</span>
+
+              </span> */}
             </motion.div>
           </Link>
 
@@ -53,7 +56,6 @@ const Navbar = () => {
                 transition={{ duration: 0.3, delay: index * 0.1 }}
                 className="list-none"
               >
-                {/* NavLink এর চিলড্রেন ফাংশন ব্যবহার করে isActive কে ভেতরে নিয়ে আসা হয়েছে */}
                 <NavLink to={item.path} className={linkStyle} onClick={() => setOpen(false)}>
                   {({ isActive }) => (
                     <>
@@ -62,7 +64,6 @@ const Navbar = () => {
                       
                       {/* border animation */}
                       <span className="relative pb-1 before:absolute before:bottom-0 before:left-0 before:h-[2px] before:w-full before:scale-x-0 before:bg-lime-400 before:transition-transform before:duration-300 hover:before:scale-x-100 md:block">
-                        {/* NavLink এর আসল isActive দিয়ে বর্ডারের স্কেল লাইভ কন্ট্রোল হচ্ছে */}
                         <span className={`absolute bottom-0 left-0 h-[2px] w-full bg-lime-400 transition-transform duration-300 ${
                           isActive ? "scale-x-100" : "scale-x-0"
                         }`} />
@@ -106,7 +107,7 @@ const Navbar = () => {
               className="xl:hidden overflow-hidden"
             >
               <ul className="flex flex-col gap-4 pl-2 border-t border-green-800 pt-4">
-                {menuItems.map((item, index) => (
+                {menuItems.map((item) => (
                   <motion.li key={item.path} className="list-none">
                     <NavLink to={item.path} className={linkStyle} onClick={() => setOpen(false)}>
                       {({ isActive }) => (
