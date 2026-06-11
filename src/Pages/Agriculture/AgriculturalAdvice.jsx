@@ -28,7 +28,7 @@ const AgriculturalAdvice = () => {
                     </span>
                     
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-100 leading-normal md:leading-snug tracking-wide">
-                        সঠি <span className="text-emerald-500">কৃষি পরামর্শ</span> <br className="hidden sm:inline" />
+                        সঠিক <span className="text-emerald-500">কৃষি পরামর্শ</span> <br className="hidden sm:inline" />
                         নিন, ফসলের ফলন বাড়ান
                     </h1>
                     
@@ -61,7 +61,7 @@ const AgriculturalAdvice = () => {
                     <div className="absolute w-72 h-72 bg-emerald-500 rounded-full filter blur-[100px] opacity-20 animate-pulse"></div>
                     
                     <img 
-                        src="https://i.ibb.co.com/cKRLF815/IMG-20260115-WA0010.jpg" 
+                        src="https://i.ibb.co.com/ksQDwnnC/Whats-App-Image-2026-06-10-at-2-35-01-PM.jpg" 
                         alt="কৃষি মাঠ" 
                         className="rounded-2xl shadow-2xl relative z-10 w-full max-w-md md:max-w-full object-cover h-[300px] sm:h-[380px] md:h-[450px] border-4 border-emerald-950"
                     />

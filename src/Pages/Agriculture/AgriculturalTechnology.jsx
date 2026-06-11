@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FiCheckCircle, FiCpu, FiTrendingUp, FiFeather } from 'react-icons/fi';
 
 const AgriculturalTechnology = () => {
-    // ফ্রেমার মোশন অ্যানিমেশন ভেরিয়েন্ট (সহজে কোড মেইনটেইন করার জন্য)
+    // ফ্রেমার মোশন অ্যানিমেশন ভেরিয়েন্ট (সহজে কোড মেইনটেইন করার জন্য)
     const fadeInLeft = {
         hidden: { opacity: 0, x: -60 },
         visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
@@ -15,9 +15,10 @@ const AgriculturalTechnology = () => {
     };
 
     return (
-        <section className="bg-[#01160c] min-h-[85vh] flex items-center justify-center py-20 px-4 sm:px-6 md:px-16 relative overflow-hidden">
+        // এখানে border-t, border-b এবং border-emerald-500/10 যুক্ত করা হয়েছে
+        <section className="bg-[#01160c] border-t border-b border-emerald-500/10 min-h-[85vh] flex items-center justify-center py-20 px-4 sm:px-6 md:px-16 relative overflow-hidden">
             
-            {/* ব্যাকগ্রাউন্ড নিয়ন গ্লো ইফেক্ট */}
+            {/* ব্যাকগ্রাউন্ড নিয়ন গ্লো ইফেক্ট */}
             <div className="absolute top-1/3 right-10 w-80 h-80 bg-emerald-500 rounded-full filter blur-[130px] opacity-10 animate-pulse"></div>
             <div className="absolute bottom-1/4 left-10 w-80 h-80 bg-green-600 rounded-full filter blur-[130px] opacity-10 animate-pulse"></div>
 
@@ -36,11 +37,11 @@ const AgriculturalTechnology = () => {
                     
                     <div className="relative bg-emerald-950/20 border border-emerald-500/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
                         <img 
-                            src="https://i.ibb.co.com/0jr4FHpR/IMG-20260119-WA0004.jpg" 
+                            src="https://i.ibb.co.com/qMTNt8tQ/letp-bk-66f8c835b6b2b.jpg" 
                             alt="Modern Agricultural Technology" 
                             className="w-full h-[350px] sm:h-[450px] object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                         />
-                        {/* ইমেজের ওপর ডার্ক ওভারলে গ্রেডিয়েন্ট */}
+                        {/* ইমেজের ওপর ডার্ক ওভারলে গ্রেডিয়েন্ট */}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#01160c] via-transparent to-transparent opacity-60"></div>
                     </div>
                 </motion.div>
@@ -66,7 +67,7 @@ const AgriculturalTechnology = () => {
 
                     {/* বিবরণী */}
                     <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-                        সনাতন পদ্ধতি ছেড়ে আধুনিক কৃষি প্রযুক্তি ব্যবহার করলে শ্রম ও খরচ দুটোই অর্ধেক কমে যায়। সঠিক সময়ে মাটির আর্দ্রতা, সারের অনুপাত এবং আবহাওয়ার পূর্বাভাস জানার মাধ্যমে ফসলের উৎপাদন বৃদ্ধি পায় বহুগুণ।
+                        সনাতন পদ্ধতি ছেড়ে আধুনিক কৃষি প্রযুক্তি ব্যবহার করলে শ্রম ও খরচ দুটোই অর্ধেক কমে যায়। সঠিক সময়ে মাটির আর্দ্রতা, সারের অনুপাত এবং আবহাওয়ার পূর্বাভাস জানার মাধ্যমে ফসলের উৎপাদন বৃদ্ধি পায় বহুগুণ।
                     </p>
 
                     {/* সুবিধাগুলোর লিস্ট */}
@@ -78,7 +79,7 @@ const AgriculturalTechnology = () => {
                             </div>
                             <div>
                                 <h4 className="text-gray-200 font-bold text-base sm:text-lg tracking-wide">১০০% পর্যন্ত ফলন বৃদ্ধি</h4>
-                                <p className="text-gray-400 text-sm mt-0.5">সঠিক ডেটা ও প্রযুক্তির মাপজোখে চাষ করায় অপচয় রোধ হয় এবং ফসলের গুণগত মান বাড়ে।</p>
+                                <p className="text-gray-400 text-sm mt-0.5">সঠিক ডেটা ও প্রযুক্তির মাপজোখে চাষ করায় অপচয় রোধ হয় এবং ফসলের গুণগত মান বাড়ে।</p>
                             </div>
                         </div>
 
@@ -87,8 +88,8 @@ const AgriculturalTechnology = () => {
                                 <FiFeather className="text-lg" />
                             </div>
                             <div>
-                                <h4 className="text-gray-200 font-bold text-base sm:text-lg tracking-wide">সময় ও সারের সঠিক সাশ্রয়</h4>
-                                <p className="text-gray-400 text-sm mt-0.5">ডিজিটাল মিটারের সাহায্যে জমির নিখুঁত পরিমাপ অনুযায়ী সার ও কীটনাশক প্রয়োগ করা যায়।</p>
+                                <h4 className="text-gray-200 font-bold text-base sm:text-lg tracking-wide">সময় ও সারের সঠিক সাশ্রয়</h4>
+                                <p className="text-gray-400 text-sm mt-0.5">ডিজিটাল মিটারের সাহায্যে জমির নিখুঁত পরিমাপ অনুযায়ী সার ও কীটনাশক প্রয়োগ করা যায়।</p>
                             </div>
                         </div>
 
@@ -97,8 +98,8 @@ const AgriculturalTechnology = () => {
                                 <FiCheckCircle className="text-lg" />
                             </div>
                             <div>
-                                <h4 className="text-gray-200 font-bold text-base sm:text-lg tracking-wide">ঝুঁকি ও রোগবালাই নিয়ন্ত্রণ</h4>
-                                <p className="text-gray-400 text-sm mt-0.5">প্রযুক্তির আগাম সতর্কবার্তার মাধ্যমে খরা, বন্যা কিংবা পোকার আক্রমণ থেকে ফসল রক্ষা করা সহজ হয়।</p>
+                                <h4 className="text-gray-200 font-bold text-base sm:text-lg tracking-wide">ঝুঁকি ও রোগবালাই নিয়ন্ত্রণ</h4>
+                                <p className="text-gray-400 text-sm mt-0.5">প্রযুক্তির আগাম সতর্কবার্তার মাধ্যমে খরা, বন্যা কিংবা পোকার আক্রমণ থেকে ফসল রক্ষা করা সহজ হয়।</p>
                             </div>
                         </div>
 

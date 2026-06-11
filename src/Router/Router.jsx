@@ -10,6 +10,9 @@ import ErrorPage from '../components/ErrorPage';
 import Loging from '../components/Loging';
 import Register from '../components/Register';
 import Ai from '../Pages/Ai/Ai';
+import AddProduct from '../Pages/Dashboard/AddProduct';
+import MyProducts from '../Pages/Dashboard/MyProducts';
+import OrderedProducts from '../Pages/Dashboard/OrderedProducts';
 
 const Router = createBrowserRouter([
     {
@@ -48,6 +51,18 @@ const Router = createBrowserRouter([
             {
                 path:'ai-assistant',
                 element:<Ai/>
+            },
+            {
+                path: 'dashboard/add-product',
+                element: <AddProduct />
+            },
+            {
+                path: 'dashboard/my-products',
+                element: <MyProducts />
+            },
+            {
+                path: 'dashboard/ordered-products',
+                element: <OrderedProducts />
             }
         ]
     }

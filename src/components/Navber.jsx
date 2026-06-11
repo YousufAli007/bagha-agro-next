@@ -1,15 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router"; // useNavigate যোগ করা হয়েছে
 
 import { motion, AnimatePresence } from "framer-motion";
-import { FaBars, FaCartShopping, FaCow, FaFish, FaRobot, FaWheatAwn, FaHouse, FaUser, FaRightFromBracket } from "react-icons/fa6";
+import { FaBars, FaCartShopping, FaCow, FaFish, FaRobot, FaWheatAwn, FaHouse, FaUser, FaRightFromBracket, FaChevronRight } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa"; 
 import useAuth from "../Hooks/useAuth";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate(); // নেভিগেশনের জন্য
+  const dropdownRef = useRef(null);
+
+  // click outside listener to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // nav menu list
   const menuItems = [
@@ -78,35 +93,108 @@ const Navbar = () => {
           </ul>
 
           {/* Desktop Auth Section */}
-          <div className="hidden xl:block">
+          <div className="hidden xl:block relative" ref={dropdownRef}>
             {user ? (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 bg-green-950/50 px-3 py-1.5 rounded-full border border-green-700">
+              <div className="relative">
+                {/* User Profile Icon/Avatar Button */}
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center justify-center w-11 h-11 rounded-full border-2 border-lime-400 cursor-pointer focus:outline-none overflow-hidden bg-green-950 shadow-md"
+                >
                   {user?.photoURL ? (
                     <img 
                       src={user.photoURL} 
                       alt="User" 
-                      className="w-8 h-8 rounded-full border-2 border-lime-400 object-cover"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-green-800 flex items-center justify-center text-lime-400 border-2 border-lime-400">
-                      <FaUser size={16} />
+                    <div className="w-full h-full flex items-center justify-center text-lime-400">
+                      <FaUser size={18} />
                     </div>
                   )}
-                  <span className="text-white text-sm font-medium pr-1 max-w-[100px] truncate">
-                    {user?.displayName || "ইউজার"}
-                  </span>
-                </div>
-
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleLogOut}
-                  className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold shadow-md transition-colors text-sm"
-                >
-                  <FaRightFromBracket size={16} />
-                  লগআউট
                 </motion.button>
+
+                {/* Dashboard Dropdown */}
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-3 w-64 bg-gradient-to-b from-green-950 to-emerald-950 border border-green-800 rounded-2xl shadow-2xl p-4 z-[1000] text-white"
+                    >
+                      {/* User Info Header */}
+                      <div className="flex items-center gap-3 pb-3 border-b border-green-800/60 mb-3">
+                        {user?.photoURL ? (
+                          <img 
+                            src={user.photoURL} 
+                            alt="User" 
+                            className="w-10 h-10 rounded-full border border-lime-400 object-cover"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-green-800 flex items-center justify-center text-lime-400 border border-lime-400">
+                            <FaUser size={16} />
+                          </div>
+                        )}
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-semibold text-sm truncate text-white">
+                            {user?.displayName || "ইউজার"}
+                          </span>
+                          <span className="text-xs text-gray-400 truncate">
+                            {user?.email || "ইমেইল উপলব্ধ নেই"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Dashboard Links */}
+                      <div className="flex flex-col gap-1 mb-4">
+                        <Link 
+                          to="/dashboard/add-product" 
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-green-850/60 text-gray-200 hover:text-lime-400 transition-all duration-200"
+                        >
+                          <FaChevronRight className="text-[10px] text-lime-400" />
+                          <span>পণ্য অ্যাড</span>
+                        </Link>
+                        <Link 
+                          to="/dashboard/my-products" 
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-green-850/60 text-gray-200 hover:text-lime-400 transition-all duration-200"
+                        >
+                          <FaChevronRight className="text-[10px] text-lime-400" />
+                          <span>আমার পণ্য</span>
+                        </Link>
+                        <Link 
+                          to="/dashboard/ordered-products" 
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium hover:bg-green-850/60 text-gray-200 hover:text-lime-400 transition-all duration-200"
+                        >
+                          <FaChevronRight className="text-[10px] text-lime-400" />
+                          <span>অর্ডারকৃত পণ্য</span>
+                        </Link>
+                      </div>
+
+                      {/* Logout Button */}
+                      <div className="border-t border-green-800/60 pt-3">
+                        <motion.button 
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            handleLogOut();
+                            setDropdownOpen(false);
+                          }}
+                          className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-semibold shadow-md transition-colors text-sm cursor-pointer"
+                        >
+                          <FaRightFromBracket size={14} />
+                          লগআউট
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               // বাটনে ক্লিক করলে সরাসরি লগইন পেজে নিয়ে যাবে
@@ -114,7 +202,7 @@ const Navbar = () => {
                 whileHover={{ scale: 1.05, backgroundColor: "#a3e635" }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate("/login")}
-                className="bg-lime-500 text-green-950 px-5 py-2 rounded-xl font-semibold shadow-md transition-colors"
+                className="bg-lime-500 text-green-950 px-5 py-2 rounded-xl font-semibold shadow-md transition-colors cursor-pointer"
               >
                 লগইন / সাইনআপ
               </motion.button>
@@ -124,7 +212,7 @@ const Navbar = () => {
           {/* Mobile & Tablet Menu Button */}
           <button
             onClick={() => setOpen(!open)}
-            className="xl:hidden text-gray-100 hover:text-lime-400 p-2 focus:outline-none"
+            className="xl:hidden text-gray-100 hover:text-lime-400 p-2 focus:outline-none cursor-pointer"
           >
             {open ? <FaTimes size={26} /> : <FaBars size={26} />}
           </button>
@@ -176,13 +264,47 @@ const Navbar = () => {
                           <FaUser size={18} />
                         </div>
                       )}
-                      <span className="text-white font-medium">
-                        {user?.displayName || "আপনার প্রোফাইল"}
-                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-white font-medium truncate">
+                          {user?.displayName || "ইউজার"}
+                        </span>
+                        <span className="text-xs text-gray-400 truncate">
+                          {user?.email || ""}
+                        </span>
+                      </div>
                     </div>
+
+                    {/* Mobile Dashboard Links */}
+                    <div className="flex flex-col gap-1 pl-1">
+                      <Link 
+                        to="/dashboard/add-product" 
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2.5 py-2 text-sm font-semibold text-gray-100 hover:text-lime-400 transition-colors"
+                      >
+                        <FaChevronRight className="text-[10px] text-lime-400" />
+                        <span>পণ্য অ্যাড</span>
+                      </Link>
+                      <Link 
+                        to="/dashboard/my-products" 
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2.5 py-2 text-sm font-semibold text-gray-100 hover:text-lime-400 transition-colors"
+                      >
+                        <FaChevronRight className="text-[10px] text-lime-400" />
+                        <span>আমার পণ্য</span>
+                      </Link>
+                      <Link 
+                        to="/dashboard/ordered-products" 
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2.5 py-2 text-sm font-semibold text-gray-100 hover:text-lime-400 transition-colors"
+                      >
+                        <FaChevronRight className="text-[10px] text-lime-400" />
+                        <span>অর্ডারকৃত পণ্য</span>
+                      </Link>
+                    </div>
+
                     <button 
                       onClick={() => { handleLogOut(); setOpen(false); }}
-                      className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2.5 rounded-xl font-semibold shadow-md"
+                      className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2.5 rounded-xl font-semibold shadow-md mt-2 cursor-pointer"
                     >
                       <FaRightFromBracket size={18} />
                       লগআউট করুন
@@ -191,7 +313,7 @@ const Navbar = () => {
                 ) : (
                   <button 
                     onClick={() => { navigate("/login"); setOpen(false); }}
-                    className="w-full bg-gradient-to-r from-lime-500 to-lime-600 text-green-950 py-2.5 rounded-xl font-semibold shadow-md"
+                    className="w-full bg-gradient-to-r from-lime-500 to-lime-600 text-green-950 py-2.5 rounded-xl font-semibold shadow-md cursor-pointer"
                   >
                     লগইন / সাইনআপ
                   </button>
