@@ -7,6 +7,9 @@ import Livestock from '../Pages/Livestock/Livestock';
 import Fisheries from '../Pages/Fisheries/Fisheries';
 import AgriculturalMarket from '../Pages/AgriculturalMarket/AgriculturalMarket';
 import ErrorPage from '../components/ErrorPage';
+import Loging from '../components/Loging';
+import Register from '../components/Register';
+import Ai from '../Pages/Ai/Ai';
 
 const Router = createBrowserRouter([
     {
@@ -33,6 +36,18 @@ const Router = createBrowserRouter([
             {
                 path: "agro-market",
                 element: <AgriculturalMarket />
+            },
+            {
+                path:'login',
+                element:<Loging/>
+            },
+            {
+                path:'register',
+                element:<Register/>
+            },
+            {
+                path:'ai-assistant',
+                element:<Ai/>
             }
         ]
     }

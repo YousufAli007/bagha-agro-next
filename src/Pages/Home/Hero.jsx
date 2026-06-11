@@ -17,12 +17,12 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-[85vh] w-full flex items-center justify-center overflow-hidden bg-emerald-950">
+    <section className="relative h-[65vh] w-full flex items-center justify-center overflow-hidden bg-emerald-950">
       {/* ১. backgrond img and drak color */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-10000 ease-out scale-105"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=75&w=1200&auto=format&fit=crop')`, // ছবির সাইজ অপ্টিমাইজ করা হলো যাতে সাইট ভারী না হয়
+          backgroundImage: `url('https://i.ibb.co.com/S4b2Jpd0/Gemini-Generated-Image-pd324tpd324tpd32.png')`, // ছবির সাইজ অপ্টিমাইজ করা হলো যাতে সাইট ভারী না হয়
         }}
       />
       {/* image drak over let becuse text see the clear */}

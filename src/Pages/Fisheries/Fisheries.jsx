@@ -1,9 +1,17 @@
 import React from 'react';
+import Hero from './Hero';
+import CoreServices from './CoreServices';
+import TechnologyTraining from './TechnologyTraining';
+import SmartTools from './SmartTools';
 
 const Fisheries = () => {
     return (
         <div>
-            <h1>hello youuf ali</h1>
+            <Hero/>
+            <CoreServices/>
+            <SmartTools/>
+            <TechnologyTraining/>
+
         </div>
     );
 };

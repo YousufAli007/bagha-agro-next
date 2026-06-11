@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion'; // ফ্রেমার মোশন ইম্পোর্ট করা হলো
+import { motion } from 'framer-motion'; 
 import { FiRefreshCw, FiPlusCircle } from 'react-icons/fi';
 import { BsCalculator, BsConeStriped } from 'react-icons/bs';
 
 const FertilizerMeter = () => {
     // স্টেট ম্যানেজমেন্ট
     const [crop, setCrop] = useState('');
-    const [fertilizer, setFertilizer] = useState('');
     const [landAmount, setLandAmount] = useState('');
     const [result, setResult] = useState(null);
     const [isCalculating, setIsCalculating] = useState(false);
 
-    // ফসলের ডেটাবেজ (১ শতক জমির জন্য সারের হার কেজিতে)
+    // ফসলের ডেটাবেজ (১ শতক জমির জন্য সারের হার কেজিতে - আম সবার প্রথমে যুক্ত করা হয়েছে)
     const database = {
-        dhan: { name: 'ধান (Rice)', urea: 0.78, tsp: 0.36, mop: 0.45, gypsum: 0.30, zinc: 0.05 },
-        gom: { name: 'গম (Wheat)', urea: 0.60, tsp: 0.42, mop: 0.36, gypsum: 0.24, zinc: 0.03 },
-        alu: { name: 'আলু (Potato)', urea: 1.06, tsp: 0.66, mop: 0.84, gypsum: 0.36, zinc: 0.06 },
-        vutta: { name: 'ভুট্টা (Maize)', urea: 0.90, tsp: 0.54, mop: 0.48, gypsum: 0.30, zinc: 0.05 },
-        shorisha: { name: 'সরিষা (Mustard)', urea: 0.54, tsp: 0.45, mop: 0.30, gypsum: 0.42, zinc: 0.03 }
+        mango: { name: 'আম (Mango)', urea: 0.80, dap: 0.50, tsp: 0.40, mop: 0.60, gypsum: 0.35, zinc: 0.04 },
+        dhan: { name: 'ধান (Rice)', urea: 0.35, dap: 0.40, tsp: 0.36, mop: 0.45, gypsum: 0.30, zinc: 0.05 },
+        gom: { name: 'গম (Wheat)', urea: 0.28, dap: 0.35, tsp: 0.42, mop: 0.36, gypsum: 0.24, zinc: 0.03 },
+        alu: { name: 'আলু (Potato)', urea: 0.50, dap: 0.60, tsp: 0.66, mop: 0.84, gypsum: 0.36, zinc: 0.06 },
+        vutta: { name: 'ভুট্টা (Maize)', urea: 0.40, dap: 0.50, tsp: 0.54, mop: 0.48, gypsum: 0.30, zinc: 0.05 },
+        shorisha: { name: 'সরিষা (Mustard)', urea: 0.25, dap: 0.30, tsp: 0.45, mop: 0.30, gypsum: 0.42, zinc: 0.03 }
     };
 
     // সারের নাম ম্যাপিং
     const fertilizerNames = {
-        urea: 'ইউরিয়া (Urea)',
+        urea: 'ইউরিয়া (Urea)',
+        dap: 'ডিএপি (DAP)',
         tsp: 'টিএসপি (TSP)',
         mop: 'এমওপি (MOP)',
         gypsum: 'জিপসাম (Gypsum)',
@@ -33,8 +34,8 @@ const FertilizerMeter = () => {
     const handleCalculate = (e) => {
         e.preventDefault();
         
-        if (!crop || !fertilizer || !landAmount || landAmount <= 0) {
-            alert('অনুগ্রহ করে ফসল, সার এবং সঠিক জমির পরিমাণ সিলেক্ট করুন।');
+        if (!crop || !landAmount || landAmount <= 0) {
+            alert('অনুগ্রহ করে ফসল এবং সঠিক জমির পরিমাণ সিলেক্ট করুন।');
             return;
         }
 
@@ -42,14 +43,20 @@ const FertilizerMeter = () => {
         setResult(null);
 
         setTimeout(() => {
-            const ratePerShotok = database[crop][fertilizer];
-            const totalAmount = (ratePerShotok * parseFloat(landAmount)).toFixed(2);
+            const cropData = database[crop];
+            const land = parseFloat(landAmount);
+
+            // সবগুলো সারের হিসাব একসাথে অবজেক্টে রূপান্তর
+            const calculatedFertilizers = Object.keys(fertilizerNames).map(key => ({
+                id: key,
+                name: fertilizerNames[key],
+                total: (cropData[key] * land).toFixed(2)
+            }));
 
             setResult({
-                cropName: database[crop].name,
-                fertilizerName: fertilizerNames[fertilizer],
-                total: totalAmount,
-                shotok: landAmount
+                cropName: cropData.name,
+                shotok: landAmount,
+                fertilizers: calculatedFertilizers
             });
             setIsCalculating(false);
         }, 400);
@@ -58,7 +65,6 @@ const FertilizerMeter = () => {
     // রিসেট ফাংশন
     const handleReset = () => {
         setCrop('');
-        setFertilizer('');
         setLandAmount('');
         setResult(null);
     };
@@ -70,7 +76,7 @@ const FertilizerMeter = () => {
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500 rounded-full filter blur-[150px] opacity-10 animate-pulse"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-green-600 rounded-full filter blur-[150px] opacity-10 animate-pulse"></div>
 
-            {/* মূল কার্ড - Framer Motion স্ক্রোল অ্যানিমেশন সহ */}
+            {/* মূল কার্ড */}
             <motion.div 
                 initial={{ opacity: 0, y: 50, scale: 0.95 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -82,21 +88,21 @@ const FertilizerMeter = () => {
                 {/* হেডার সেকশন */}
                 <div className="text-center space-y-4 mb-12">
                     <div className="inline-flex items-center gap-2 bg-emerald-900/50 border border-emerald-500/20 text-emerald-400 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full uppercase tracking-wider">
-                        <FiPlusCircle className="animate-spin [animation-duration:3s]" /> স্মার্ট এগ্রি মিটার
+                        <FiPlusCircle className="animate-spin [animation-duration:3s]" /> SMART AGRI METER
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-100 tracking-wide leading-tight">
                         ডিজিটাল <span className="text-emerald-500 bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">সার পরিমাপক</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
-                        ফসল ও সারের ধরন নির্বাচন করে আপনার কাঙ্ক্ষিত জমির জন্য সঠিক সারের অনুপাত এক ক্লিকেই বের করুন।
+                        ফসল নির্বাচন এবং জমির পরিমাণ ইনপুট দিয়ে ডিএপি (DAP) সহ প্রয়োজনীয় সব সারের অনুপাত এক ক্লিকেই বের করুন।
                     </p>
                 </div>
 
                 {/* ইনপুট ফর্ম */}
                 <form onSubmit={handleCalculate} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
-                        {/* ১. ফসলের ড্রপডাউন */}
+                        {/* ১. ফসলের ড্রপডাউন (আম সবার প্রথমে রাখা হয়েছে) */}
                         <div className="flex flex-col space-y-2">
                             <label className="text-gray-300 font-semibold text-sm tracking-wide flex items-center gap-2">
                                 <BsConeStriped className="text-emerald-500" /> ফসলের নাম
@@ -108,6 +114,7 @@ const FertilizerMeter = () => {
                                 required
                             >
                                 <option value="" className="bg-[#01160c]">ফসল নির্বাচন করুন</option>
+                                <option value="mango" className="bg-[#01160c]">আম (Mango)</option>
                                 <option value="dhan" className="bg-[#01160c]">ধান (Rice)</option>
                                 <option value="gom" className="bg-[#01160c]">গম (Wheat)</option>
                                 <option value="alu" className="bg-[#01160c]">আলু (Potato)</option>
@@ -116,27 +123,7 @@ const FertilizerMeter = () => {
                             </select>
                         </div>
 
-                        {/* ২. সারের ড্রপডাউন */}
-                        <div className="flex flex-col space-y-2">
-                            <label className="text-gray-300 font-semibold text-sm tracking-wide flex items-center gap-2">
-                                <BsConeStriped className="text-emerald-500" /> সারের নাম
-                            </label>
-                            <select
-                                value={fertilizer}
-                                onChange={(e) => setFertilizer(e.target.value)}
-                                className="bg-emerald-900/20 border border-emerald-800/60 focus:border-emerald-500 text-gray-200 rounded-2xl px-4 py-4 focus:outline-none transition-all duration-300 cursor-pointer appearance-none shadow-inner hover:bg-emerald-900/30"
-                                required
-                            >
-                                <option value="" className="bg-[#01160c]">সার নির্বাচন করুন</option>
-                                <option value="urea" className="bg-[#01160c]">ইউরিয়া (Urea)</option>
-                                <option value="tsp" className="bg-[#01160c]">টিএসপি (TSP)</option>
-                                <option value="mop" className="bg-[#01160c]">এমওপি (MOP)</option>
-                                <option value="gypsum" className="bg-[#01160c]">জিপসাম (Gypsum)</option>
-                                <option value="zinc" className="bg-[#01160c]">দস্তা (Zinc)</option>
-                            </select>
-                        </div>
-
-                        {/* ৩. জমির পরিমাণ ইনপুট */}
+                        {/* ২. জমির পরিমাণ ইনপুট */}
                         <div className="flex flex-col space-y-2">
                             <label className="text-gray-300 font-semibold text-sm tracking-wide flex items-center gap-2">
                                 <BsCalculator className="text-emerald-500" /> জমির পরিমাণ (শতক)
@@ -177,37 +164,43 @@ const FertilizerMeter = () => {
                     </div>
                 </form>
 
-                {/* রেজাল্ট কার্ড - এটিও ফ্রেমার মোশন দিয়ে বাউন্স ইনপুট করা হয়েছে */}
+                {/* রেজাল্ট গ্রিড কার্ড */}
                 {result && (
                     <motion.div 
-                        initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ type: "spring", stiffness: 100, damping: 12 }}
-                        className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-emerald-900/30 to-green-950/20 border border-emerald-500/20 rounded-[2rem] shadow-inner relative overflow-hidden group"
+                        transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                        className="mt-12 p-6 sm:p-8 bg-gradient-to-br from-emerald-900/30 to-green-950/20 border border-emerald-500/20 rounded-[2rem] shadow-inner relative overflow-hidden"
                     >
-                        <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/5 rounded-full filter blur-xl"></div>
-                        
-                        <div className="flex flex-col items-center text-center space-y-4">
-                            <p className="text-emerald-400 font-medium text-xs sm:text-sm uppercase tracking-widest bg-emerald-950/60 border border-emerald-800/40 px-4 py-1 rounded-full animate-pulse">
+                        <div className="text-center space-y-2 mb-6">
+                            <p className="inline-block text-emerald-400 font-medium text-xs sm:text-sm uppercase tracking-widest bg-emerald-950/60 border border-emerald-800/40 px-4 py-1 rounded-full">
                                 ফলাফল বিবরণী
                             </p>
-                            <h4 className="text-gray-300 text-base sm:text-lg">
-                                আপনার <span className="text-gray-100 font-bold underline decoration-emerald-500 decoration-2">{result.shotok} শতক</span> জমিতে <span className="text-emerald-400 font-bold">{result.cropName}</span> চাষের জন্য:
+                            <h4 className="text-gray-300 text-base sm:text-lg pt-2">
+                                আপনার <span className="text-gray-100 font-bold underline decoration-emerald-500 decoration-2">{result.shotok} শতক</span> জমিতে <span className="text-emerald-400 font-bold">{result.cropName}</span> চাষের জন্য প্রয়োজনীয় সারসমূহ:
                             </h4>
-                            <div className="text-gray-400 text-sm sm:text-base">
-                                প্রয়োজনীয় <span className="text-gray-100 font-semibold">{result.fertilizerName}</span> এর পরিমাণ হলো:
-                            </div>
-                            
-                            <div className="bg-gradient-to-r from-emerald-600 to-green-600 px-10 py-4 rounded-2xl shadow-2xl border border-emerald-400/20 relative group-hover:scale-105 transition-transform duration-300">
-                                <span className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                                    {result.total} <span className="text-lg sm:text-2xl font-normal text-emerald-100">কেজি</span>
-                                </span>
-                            </div>
-
-                            <p className="text-[11px] text-gray-500 italic max-w-md pt-2">
-                                * বি.প্র: এটি ১ শতক জমির সরকারি কৃষি সম্প্রসারণের প্রমিত পরিমাপের ওপর ভিত্তি করে তৈরি।
-                            </p>
                         </div>
+
+                        {/* সারের তালিকার গ্রিড লেআউট */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {result.fertilizers.map((fert) => (
+                                <div 
+                                    key={fert.id}
+                                    className="bg-emerald-950/40 border border-emerald-900/40 rounded-2xl p-4 flex flex-col items-center text-center justify-between hover:border-emerald-500/30 transition-all duration-300"
+                                >
+                                    <span className="text-xs text-gray-400 font-medium mb-2">{fert.name}</span>
+                                    <div className="bg-gradient-to-r from-emerald-600/80 to-green-600/80 px-4 py-2 rounded-xl border border-emerald-400/10 w-full">
+                                        <span className="text-xl font-black text-white">
+                                            {fert.total} <span className="text-xs font-normal text-emerald-100">কেজি</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <p className="text-[11px] text-gray-500 italic text-center mt-6">
+                            * বি.প্র: এটি ১ শতক জমির সরকারি কৃষি সম্প্রসারণের প্রমিত পরিমাপের ওপর ভিত্তি করে তৈরি।
+                        </p>
                     </motion.div>
                 )}
 
