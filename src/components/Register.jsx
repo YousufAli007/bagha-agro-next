@@ -38,7 +38,7 @@ const Register = () => {
                             email: data.email
                         };
                         
-                        fetch('http://localhost:3000/users', {
+                        fetch('https://bagha-agro-server.vercel.app/users', {
                             method: 'POST',
                             headers: {
                                 'content-type': 'application/json'

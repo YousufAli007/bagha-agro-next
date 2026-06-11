@@ -30,7 +30,7 @@ const AddProduct = () => {
       createdAt: new Date().toISOString()
     };
 
-    fetch("http://localhost:3000/products", {
+    fetch("https://bagha-agro-server.vercel.app/products", {
       method: "POST",
       headers: {
         "content-type": "application/json"

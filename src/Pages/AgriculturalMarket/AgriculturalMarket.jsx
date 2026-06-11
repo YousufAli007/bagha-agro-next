@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCartPlus, FaShop, FaPhone, FaLocationDot, FaUser, FaXmark } from "react-icons/fa6";
-import { FaSearch } from "react-icons/fa"; // FaSearch আলাদাভাবে এখান থেকে ইমপোর্ট করা হলো
+import { FaCartPlus, FaShop, FaPhone, FaLocationDot, FaUser, FaXmark, FaScaleBalanced } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa"; 
 import toast from "react-hot-toast";
 
 const AgriculturalMarket = () => {
@@ -18,12 +18,13 @@ const AgriculturalMarket = () => {
   const [orderName, setOrderName] = useState("");
   const [orderPhone, setOrderPhone] = useState("");
   const [orderAddress, setOrderAddress] = useState("");
+  const [orderQuantity, setOrderQuantity] = useState(1); // ড্রপডাউনের জন্য ডিফল্ট ১ কেজি
   const [submittingOrder, setSubmittingOrder] = useState(false);
 
   // Fetch products
   const fetchProducts = (search = "") => {
     setLoading(true);
-    fetch(`http://localhost:3000/products?search=${search}`)
+    fetch(`https://bagha-agro-server.vercel.app/products?search=${search}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -64,6 +65,7 @@ const AgriculturalMarket = () => {
     setOrderName(user.displayName || "");
     setOrderPhone("");
     setOrderAddress("");
+    setOrderQuantity(1); // মডাল ওপেন হলে পরিমাণ ১ রিসেট হবে
   };
 
   // Close Order Modal
@@ -82,12 +84,18 @@ const AgriculturalMarket = () => {
 
     setSubmittingOrder(true);
 
+    // পরিমাণ অনুযায়ী মোট মূল্য হিসাব
+    const totalAmount = selectedProduct.price * orderQuantity;
+
     const orderInfo = {
       productId: selectedProduct._id,
       productName: selectedProduct.name,
-      productPrice: selectedProduct.price,
+      unitPrice: selectedProduct.price, // প্রতি কেজির দাম
+      totalPrice: totalAmount, // মোট দাম
+      quantity: `${orderQuantity} কেজি`, // কতটুকু কিনল তা যুক্ত করা হলো
       productImage: selectedProduct.image,
       sellerEmail: selectedProduct.sellerEmail,
+      sellerName: selectedProduct.sellerName,
       buyerName: orderName,
       buyerPhone: orderPhone,
       buyerAddress: orderAddress,
@@ -95,7 +103,7 @@ const AgriculturalMarket = () => {
       orderDate: new Date().toISOString()
     };
 
-    fetch("http://localhost:3000/orders", {
+    fetch("https://bagha-agro-server.vercel.app/orders", {
       method: "POST",
       headers: {
         "content-type": "application/json"
@@ -184,8 +192,10 @@ const AgriculturalMarket = () => {
                     </span>
                     {/* Product Title */}
                     <h4 className="text-base md:text-xl font-bold text-white mb-0.5 md:mb-1 truncate">{product.name}</h4>
-                    {/* Price */}
-                    <p className="text-lime-400 font-bold text-sm md:text-lg">৳ {product.price}</p>
+                    {/* Price with Per KG info */}
+                    <p className="text-lime-400 font-bold text-sm md:text-lg">
+                      ৳ {product.price} <span className="text-xs text-gray-400 font-normal">(১ কেজি)</span>
+                    </p>
                   </div>
 
                   {/* Order Button */}
@@ -234,15 +244,41 @@ const AgriculturalMarket = () => {
                   alt={selectedProduct.name}
                   className="w-16 h-16 rounded-xl object-cover border border-green-800/40"
                 />
-                <div>
+                <div className="flex-1">
                   <h4 className="font-bold text-white leading-tight">{selectedProduct.name}</h4>
-                  <p className="text-lime-400 font-bold text-sm">মূল্য: ৳ {selectedProduct.price}</p>
+                  <p className="text-gray-400 text-xs mt-0.5">একক মূল্য: ৳ {selectedProduct.price} / কেজি</p>
+                  {/* Total Price real-time updates */}
+                  <p className="text-lime-400 font-extrabold text-base mt-1">
+                    মোট মূল্য: ৳ {selectedProduct.price * orderQuantity}
+                  </p>
                 </div>
               </div>
 
               {/* Order Form */}
               <form onSubmit={handlePlaceOrder} className="space-y-4">
                 
+                {/* Quantity Dropdown (নতুন যুক্ত করা ড্রপডাউন) */}
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 z-10">
+                    <FaScaleBalanced size={15} />
+                  </span>
+                  <select
+                    value={orderQuantity}
+                    onChange={(e) => setOrderQuantity(Number(e.target.value))}
+                    className="w-full pl-10 pr-4 py-3 bg-green-950 border-2 border-green-800/80 rounded-xl text-white focus:outline-none focus:border-lime-400 text-sm cursor-pointer appearance-none relative z-0"
+                  >
+                    <option value={1} className="bg-green-950">১ কেজি</option>
+                    <option value={2} className="bg-green-950">২ কেজি</option>
+                    <option value={3} className="bg-green-950">৩ কেজি</option>
+                    <option value = {5} className="bg-green-950">৫ কেজি</option>
+                    <option value={10} className="bg-green-950">১০ কেজি</option>
+                  </select>
+                  {/* Custom arrow decoration for dropdown */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+                </div>
+
                 {/* Orderer Name Input */}
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">

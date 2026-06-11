@@ -15,7 +15,7 @@ const OrderedProducts = () => {
     if (!user) return;
 
     // Fetch orders placed by the current user
-    fetch(`http://localhost:3000/orders/buyer/${user.email}`)
+    fetch(`https://bagha-agro-server.vercel.app/orders/buyer/${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setOrders(data);
@@ -94,7 +94,12 @@ const OrderedProducts = () => {
                     />
                     <div>
                       <h4 className="text-xl font-bold text-white leading-tight">{order.productName}</h4>
-                      <p className="text-lime-400 font-bold text-base mt-1">৳ {order.productPrice}</p>
+                      <p className="text-lime-400 font-bold text-base mt-1">
+                        ৳ {order.totalPrice || order.productPrice || order.unitPrice} <span className="text-xs text-gray-400 font-normal">({order.quantity || "১ কেজি"})</span>
+                      </p>
+                      {order.unitPrice && (
+                        <p className="text-xs text-gray-400 mt-0.5">একক মূল্য: ৳ {order.unitPrice} / কেজি</p>
+                      )}
                       <p className="text-xs text-gray-400 mt-1">বিক্রেতার ইমেইল: {order.sellerEmail}</p>
                     </div>
                   </div>
