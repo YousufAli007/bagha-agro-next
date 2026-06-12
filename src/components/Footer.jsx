@@ -110,7 +110,7 @@ const Footer = () => {
                         </motion.li>
                         <li className="flex items-center space-x-3 pl-2">
                             <FaEnvelope className="text-lime-400" />
-                            <a href="mailto:support@agroseba.com" className="hover:text-lime-400 transition-colors">support@agroseba.com</a>
+                            <a href="mailto:support@agroseba.com" className="hover:text-lime-400 transition-colors">support@baghasmartagro.com</a>
                         </li>
                         <li className="flex items-start space-x-3 pl-2">
                             <FaMapMarkerAlt className="text-lime-400 mt-1" />
@@ -128,7 +128,7 @@ const Footer = () => {
                 transition={{ delay: 0.5, duration: 0.5 }}
                 className="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-green-800 text-center text-xs text-gray-400"
             >
-                <p>© {new Date().getFullYear()} এগ্রোসেবা প্ল্যাটফর্ম। সর্বস্বত্ব সংরক্ষিত।</p>
+                <p>© {new Date().getFullYear()} বাঘা স্মার্ট এগ্ৰো সেবা প্ল্যাটফর্ম। সর্বস্বত্ব সংরক্ষিত।</p>
             </motion.div>
         </footer>
     );
