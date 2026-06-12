@@ -39,7 +39,7 @@ const Footer = () => {
                 <motion.div variants={fadeInUp} className="space-y-4">
                     <div className="flex items-center space-x-2 text-white">
                         <FaLeaf className="text-lime-400 text-3xl animate-pulse" />
-                        <span className="text-2xl font-bold tracking-wide">এগ্রো<span className="text-lime-400">সেবা</span></span>
+                        <span className="text-2xl font-bold tracking-wide">বাঘা স্মার্ট <span className="text-lime-400">এগ্ৰো সেবা</span></span>
                     </div>
                     <p className="text-sm text-gray-300 leading-relaxed">
                         কৃষকদের মুখে হাসি ফোটাতে এবং আধুনিক কৃষি সেবা সবার দোড়গোড়ায় পৌঁছে দিতে আমাদের এই ক্ষুদ্র প্রয়াস। আগর চাষ ও সঠিক পরামর্শের নির্ভরযোগ্য মাধ্যম।
