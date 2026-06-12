@@ -13,6 +13,7 @@ import Ai from '../Pages/Ai/Ai';
 import AddProduct from '../Pages/Dashboard/AddProduct';
 import MyProducts from '../Pages/Dashboard/MyProducts';
 import OrderedProducts from '../Pages/Dashboard/OrderedProducts';
+import LearnAgriculture from '../Pages/LearnAgriculture/LearnAgriculture';
 
 const Router = createBrowserRouter([
     {
@@ -63,6 +64,10 @@ const Router = createBrowserRouter([
             {
                 path: 'dashboard/ordered-products',
                 element: <OrderedProducts />
+            },
+            {
+                path:'learn',
+                element:<LearnAgriculture/>
             }
         ]
     }

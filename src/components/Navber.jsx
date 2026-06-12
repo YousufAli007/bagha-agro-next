@@ -1,8 +1,20 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, NavLink, useNavigate } from "react-router"; // useNavigate যোগ করা হয়েছে
+import { Link, NavLink, useNavigate } from "react-router"; 
 
 import { motion, AnimatePresence } from "framer-motion";
-import { FaBars, FaCartShopping, FaCow, FaFish, FaRobot, FaWheatAwn, FaHouse, FaUser, FaRightFromBracket, FaChevronRight } from "react-icons/fa6";
+import { 
+  FaBars, 
+  FaCartShopping, 
+  FaCow, 
+  FaFish, 
+  FaRobot, 
+  FaWheatAwn, 
+  FaHouse, 
+  FaUser, 
+  FaRightFromBracket, 
+  FaChevronRight,
+  FaGraduationCap 
+} from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa"; 
 import useAuth from "../Hooks/useAuth";
 
@@ -10,7 +22,7 @@ const Navbar = () => {
   const { user, logOut } = useAuth();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate(); // নেভিগেশনের জন্য
+  const navigate = useNavigate(); 
   const dropdownRef = useRef(null);
 
   // click outside listener to close dropdown
@@ -32,6 +44,7 @@ const Navbar = () => {
     { name: "কৃষি সেবা", path: "/agriculture", icon: <FaWheatAwn /> },
     { name: "প্রাণিসম্পদ", path: "/livestock", icon: <FaCow /> },
     { name: "মৎস্য সেবা", path: "/fisheries", icon: <FaFish /> }, 
+    { name: "কৃষি শিক্ষা", path: "/learn", icon: <FaGraduationCap className="text-lime-400" /> },
     { name: "কৃষি বাজার", path: "/agro-market", icon: <FaCartShopping /> },
     { name: "AI সহকারী", path: "/ai-assistant", icon: <FaRobot className="text-cyan-400" /> },
   ];
@@ -66,13 +79,13 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Menu */}
-          <ul className="hidden xl:flex items-center gap-6 lg:gap-8">
+          <ul className="hidden xl:flex items-center gap-5 lg:gap-6">
             {menuItems.map((item, index) => (
               <motion.li 
                 key={item.path}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
                 className="list-none"
               >
                 <NavLink to={item.path} className={linkStyle} onClick={() => setOpen(false)}>
@@ -197,7 +210,6 @@ const Navbar = () => {
                 </AnimatePresence>
               </div>
             ) : (
-              // বাটনে ক্লিক করলে সরাসরি লগইন পেজে নিয়ে যাবে
               <motion.button 
                 whileHover={{ scale: 1.05, backgroundColor: "#a3e635" }}
                 whileTap={{ scale: 0.95 }}
@@ -226,7 +238,7 @@ const Navbar = () => {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="xl:hidden overflow-hidden"
+              className="xl:hidden overflow-hidden bg-gradient-to-b from-green-900 to-emerald-950 pb-6"
             >
               <ul className="flex flex-col gap-4 pl-2 border-t border-green-800 pt-4">
                 {menuItems.map((item) => (
@@ -249,7 +261,7 @@ const Navbar = () => {
               </ul>
 
               {/* Mobile Auth Button Section */}
-              <div className="px-2 pt-4 pb-6 border-t border-green-800/50 mt-4">
+              <div className="px-2 pt-4 pb-2 border-t border-green-800/50 mt-4">
                 {user ? (
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3 bg-green-950/50 px-4 py-2 rounded-xl border border-green-700">

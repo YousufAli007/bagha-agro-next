@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCartPlus, FaShop, FaPhone, FaLocationDot, FaUser, FaXmark, FaScaleBalanced } from "react-icons/fa6";
+import { FaCartPlus, FaShop, FaPhone, FaLocationDot, FaUser, FaXmark, FaScaleBalanced, FaBullhorn } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa"; 
 import toast from "react-hot-toast";
 
@@ -84,7 +84,7 @@ const AgriculturalMarket = () => {
 
     setSubmittingOrder(true);
 
-    // পরিমাণ অনুযায়ী মোট মূল্য হিসাব
+    // পরিমাণ অনুযায়ী মোট মূল্য হিসাব
     const totalAmount = selectedProduct.price * orderQuantity;
 
     const orderInfo = {
@@ -129,8 +129,26 @@ const AgriculturalMarket = () => {
 
   return (
     <div className="min-h-screen bg-[#01160c] text-white px-4 py-12">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto pt-8">
         
+        {/* New Notice Marquee Section */}
+        <div className="mb-8 flex items-center bg-gradient-to-r from-red-950/40 via-amber-950/30 to-green-950/40 border border-amber-500/30 rounded-xl overflow-hidden h-12 shadow-lg">
+          <div className="bg-amber-500 text-green-950 px-4 h-full flex items-center gap-1.5 font-bold text-sm md:text-base z-10 shrink-0 shadow-md animate-pulse">
+            <FaBullhorn className="text-base" />
+            <span>ঘোষণা:</span>
+          </div>
+          <marquee 
+            behavior="scroll" 
+            direction="left" 
+            scrollamount="6"
+            onMouseOver={(e) => e.target.stop()} 
+            onMouseOut={(e) => e.target.start()}
+            className="text-amber-200 font-medium text-xs md:text-sm pl-4 cursor-pointer"
+          >
+            আমাদের এখানে আপাতত সুন্দরবন এবং স্টিডফাস্ট (Steadfast) কুরিয়ারের মাধ্যমে পণ্য ডেলিভারি করা হয়। বর্তমানে আমাদের নিজস্ব কুরিয়ার সার্ভিসের আপডেটের কাজ চলমান থাকায় সাময়িকভাবে এটি বন্ধ আছে। সাময়িক অসুবিধার জন্য আমরা আন্তরিকভাবে দুঃখিত।
+          </marquee>
+        </div>
+
         {/* Banner Section */}
         <div className="text-center mb-10">
           <div className="inline-flex p-3 bg-green-900/50 rounded-2xl border border-green-700 text-lime-400 mb-3 text-3xl">
@@ -257,7 +275,7 @@ const AgriculturalMarket = () => {
               {/* Order Form */}
               <form onSubmit={handlePlaceOrder} className="space-y-4">
                 
-                {/* Quantity Dropdown (নতুন যুক্ত করা ড্রপডাউন) */}
+                {/* Quantity Dropdown */}
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 z-10">
                     <FaScaleBalanced size={15} />
@@ -270,7 +288,7 @@ const AgriculturalMarket = () => {
                     <option value={1} className="bg-green-950">১ কেজি</option>
                     <option value={2} className="bg-green-950">২ কেজি</option>
                     <option value={3} className="bg-green-950">৩ কেজি</option>
-                    <option value = {5} className="bg-green-950">৫ কেজি</option>
+                    <option value={5} className="bg-green-950">৫ কেজি</option>
                     <option value={10} className="bg-green-950">১০ কেজি</option>
                   </select>
                   {/* Custom arrow decoration for dropdown */}
