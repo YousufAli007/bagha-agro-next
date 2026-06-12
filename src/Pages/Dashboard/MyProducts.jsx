@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useAuth from "../../Hooks/useAuth";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaBoxesStacked, FaTruckFast, FaPhone, FaMapLocationDot, FaUser, FaCircleExclamation, FaWheatAwn } from "react-icons/fa6";
+import { FaBoxesStacked, FaTruckFast, FaPhone, FaMapLocationDot, FaUser, FaCircleExclamation, FaWheatAwn, FaPenToSquare, FaTrashCan, FaXmark } from "react-icons/fa6";
 import toast from "react-hot-toast";
 
 const MyProducts = () => {
@@ -13,6 +13,72 @@ const MyProducts = () => {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [activeTab, setActiveTab] = useState("products"); // "products" or "orders"
+  const [deletingProductId, setDeletingProductId] = useState(null);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editForm, setEditForm] = useState({ name: "", price: "", image: "" });
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const handleDeleteConfirm = () => {
+    setActionLoading(true);
+    fetch(`https://bagha-agro-server.vercel.app/products/${deletingProductId}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setActionLoading(false);
+        setDeletingProductId(null);
+        toast.success("পণ্যটি সফলভাবে মুছে ফেলা হয়েছে!");
+        setProducts(products.filter((p) => p._id !== deletingProductId));
+      })
+      .catch((err) => {
+        console.error("Error deleting product:", err);
+        setActionLoading(false);
+        toast.error("পণ্যটি মুছে ফেলা সম্ভব হয়নি।");
+      });
+  };
+
+  const handleEditClick = (product) => {
+    setEditingProduct(product);
+    setEditForm({
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    });
+  };
+
+  const handleEditSave = (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    fetch(`https://bagha-agro-server.vercel.app/products/${editingProduct._id}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        name: editForm.name,
+        price: parseFloat(editForm.price),
+        image: editForm.image,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setActionLoading(false);
+        setEditingProduct(null);
+        toast.success("পণ্যটি সফলভাবে আপডেট করা হয়েছে!");
+        setProducts(
+          products.map((p) =>
+            p._id === editingProduct._id
+              ? { ...p, name: editForm.name, price: parseFloat(editForm.price), image: editForm.image }
+              : p
+          )
+        );
+      })
+      .catch((err) => {
+        console.error("Error updating product:", err);
+        setActionLoading(false);
+        toast.error("পণ্যটি আপডেট করা সম্ভব হয়নি।");
+      });
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -142,7 +208,26 @@ const MyProducts = () => {
                           <h4 className="text-xl font-bold text-white mb-1">{product.name}</h4>
                           <p className="text-lime-400 font-bold text-lg mb-2">৳ {product.price}</p>
                         </div>
-                        <div className="border-t border-green-850 pt-3 mt-2 text-xs text-gray-400 flex justify-between items-center">
+                        
+                        {/* Edit and Delete Buttons */}
+                        <div className="flex gap-2.5 mt-2 mb-3">
+                          <button
+                            onClick={() => handleEditClick(product)}
+                            className="flex-1 flex items-center justify-center gap-1.5 bg-lime-500 hover:bg-lime-400 text-green-950 font-bold py-2 rounded-xl text-xs transition duration-300 cursor-pointer"
+                          >
+                            <FaPenToSquare size={12} />
+                            সম্পাদনা
+                          </button>
+                          <button
+                            onClick={() => setDeletingProductId(product._id)}
+                            className="flex-1 flex items-center justify-center gap-1.5 bg-red-500 hover:bg-red-650 text-white font-bold py-2 rounded-xl text-xs transition duration-300 cursor-pointer"
+                          >
+                            <FaTrashCan size={12} />
+                            মুছে ফেলুন
+                          </button>
+                        </div>
+
+                        <div className="border-t border-green-850 pt-3 mt-1 text-xs text-gray-400 flex justify-between items-center">
                           <span>যোগ করা হয়েছে:</span>
                           <span>{product.createdAt ? new Date(product.createdAt).toLocaleDateString("bn-BD") : "N/A"}</span>
                         </div>
@@ -230,6 +315,106 @@ const MyProducts = () => {
         </div>
 
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {deletingProductId && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-gradient-to-b from-[#022e1a] to-[#012012] border border-green-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl relative text-left"
+            >
+              <h3 className="text-xl font-bold text-white mb-2">পণ্য মুছে ফেলার নিশ্চিতকরণ</h3>
+              <p className="text-gray-300 text-sm mb-6">আপনি কি নিশ্চিত যে আপনি এই পণ্যটি মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।</p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setDeletingProductId(null)}
+                  className="flex-1 bg-green-900/40 text-gray-300 border border-green-800 py-2.5 rounded-xl font-bold hover:bg-green-900/60 transition cursor-pointer"
+                >
+                  বাতিল
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  disabled={actionLoading}
+                  className="flex-1 bg-red-500 hover:bg-red-650 text-white py-2.5 rounded-xl font-bold transition cursor-pointer disabled:bg-gray-600 disabled:cursor-not-allowed"
+                >
+                  {actionLoading ? "মুছা হচ্ছে..." : "মুছে ফেলুন"}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Product Modal */}
+      <AnimatePresence>
+        {editingProduct && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 overflow-y-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="bg-gradient-to-b from-[#022e1a] to-[#012012] border border-green-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative my-8 text-left"
+            >
+              <button
+                onClick={() => setEditingProduct(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-white transition cursor-pointer"
+              >
+                <FaXmark size={20} />
+              </button>
+
+              <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                <FaPenToSquare className="text-lime-400" /> পণ্য সম্পাদনা
+              </h3>
+
+              <form onSubmit={handleEditSave} className="space-y-5">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-300 text-sm font-semibold">পণ্যের নাম</label>
+                  <input
+                    type="text"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    className="w-full bg-[#01160c]/60 border border-green-800/80 focus:border-lime-400 text-white rounded-xl px-4 py-3.5 focus:outline-none transition-colors"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-300 text-sm font-semibold">মূল্য (টাকা)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={editForm.price}
+                    onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
+                    className="w-full bg-[#01160c]/60 border border-green-800/80 focus:border-lime-400 text-white rounded-xl px-4 py-3.5 focus:outline-none transition-colors"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-300 text-sm font-semibold">ছবির লিংক</label>
+                  <input
+                    type="url"
+                    value={editForm.image}
+                    onChange={(e) => setEditForm({ ...editForm, image: e.target.value })}
+                    className="w-full bg-[#01160c]/60 border border-green-800/80 focus:border-lime-400 text-white rounded-xl px-4 py-3.5 focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="w-full bg-gradient-to-r from-lime-500 to-lime-600 hover:from-lime-400 hover:to-lime-500 text-green-950 font-bold py-3 rounded-xl transition duration-300 cursor-pointer disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed mt-2"
+                >
+                  {actionLoading ? "আপডেট হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"}
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

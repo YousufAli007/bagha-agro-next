@@ -16,7 +16,7 @@ const Ai = () => {
     const [messages, setMessages] = useState([
         { 
             sender: 'assistant', 
-            text: 'আসসালামু আলাইকুম! আমি বাঘা এগ্রো AI সহকারী। ফসল উৎপাদন, মাটির স্বাস্থ্য, মাছ চাষ, গবাদি পশু পালন বা কৃষি বাজার দর সংক্রান্ত যেকোনো প্রশ্ন আমাকে জিজ্ঞেস করতে পারেন।',
+            text: 'আসসালামু আলাইকুম! আমি বাঘা স্মার্ট এগ্রো AI সহকারী। ফসল উৎপাদন, মাটির স্বাস্থ্য, মাছ চাষ, গবাদি পশু পালন বা কৃষি বাজার দর সংক্রান্ত যেকোনো প্রশ্ন আমাকে জিজ্ঞেস করতে পারেন।',
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
     ]);
@@ -464,7 +464,7 @@ const Ai = () => {
                                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-[#01160c]"></span>
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="font-bold text-lg text-white">বাঘা এগ্রো AI সহকারী</span>
+                                    <span className="font-bold text-lg text-white">বাঘা স্মার্ট এগ্রো AI সহকারী</span>
                                     <span className="text-xs text-lime-400 flex items-center gap-1.5">
                                         <span className="inline-block w-1.5 h-1.5 rounded-full bg-lime-400 animate-ping"></span>
                                         অনলাইন | শীঘ্রই AI আরো আপডেট হবে 🚀
